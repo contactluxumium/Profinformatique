@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar';
 import Unites from './components/Lessons';
 import Dashboard from './components/Dashboard';
 import { translations } from './constants';
-import { Language, NavigationItem } from './types';
+import { Language, NavigationItem, Unit } from './types';
 import { LanguageContext } from './contexts/LanguageContext';
 import { MenuIcon, XIcon } from './components/Icons';
 
@@ -11,22 +11,56 @@ const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('ar');
   const [activeTab, setActiveTab] = useState<NavigationItem>('unites');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [completedSubUnits, setCompletedSubUnits] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
   }, [language]);
 
+  useEffect(() => {
+    const storedCompleted = localStorage.getItem('completedSubUnits');
+    if (storedCompleted) {
+      setCompletedSubUnits(new Set(JSON.parse(storedCompleted)));
+    }
+  }, []);
+
   const t = useMemo(() => translations[language], [language]);
+
+  const handleToggleCompletion = useCallback((subUnitId: string) => {
+    setCompletedSubUnits(prev => {
+      const newCompleted = new Set(prev);
+      if (newCompleted.has(subUnitId)) {
+        newCompleted.delete(subUnitId);
+      } else {
+        newCompleted.add(subUnitId);
+      }
+      localStorage.setItem('completedSubUnits', JSON.stringify(Array.from(newCompleted)));
+      return newCompleted;
+    });
+  }, []);
+
+  const areAllTasksCompleted = useMemo(() => {
+    const allUnits = (translations.ar.unites.units || []) as Unit[];
+    const totalSubUnits = allUnits.reduce((acc, unit) => acc + unit.subUnits.length, 0);
+    if (totalSubUnits === 0) return false;
+    return completedSubUnits.size === totalSubUnits;
+  }, [completedSubUnits]);
+
+  useEffect(() => {
+    if (activeTab === 'dashboard' && !areAllTasksCompleted) {
+      setActiveTab('unites');
+    }
+  }, [activeTab, areAllTasksCompleted]);
 
   const renderContent = () => {
     switch (activeTab) {
       case 'unites':
-        return <Unites />;
+        return <Unites completedSubUnits={completedSubUnits} onToggleCompletion={handleToggleCompletion} />;
       case 'dashboard':
-        return <Dashboard />;
+        return areAllTasksCompleted ? <Dashboard /> : <Unites completedSubUnits={completedSubUnits} onToggleCompletion={handleToggleCompletion} />;
       default:
-        return <Unites />;
+        return <Unites completedSubUnits={completedSubUnits} onToggleCompletion={handleToggleCompletion} />;
     }
   };
 
@@ -41,7 +75,7 @@ const App: React.FC = () => {
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
       <div className="flex h-screen bg-slate-100 dark:bg-slate-900 font-sans">
         <div className={`fixed inset-y-0 z-30 transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : (language === 'ar' ? 'translate-x-full' : '-translate-x-full')}`}>
-          <Sidebar activeTab={activeTab} onSelectTab={handleTabSelect} />
+          <Sidebar activeTab={activeTab} onSelectTab={handleTabSelect} areAllTasksCompleted={areAllTasksCompleted} />
         </div>
         
         {isSidebarOpen && <div className="fixed inset-0 bg-black/50 z-20 md:hidden" onClick={() => setIsSidebarOpen(false)}></div>}

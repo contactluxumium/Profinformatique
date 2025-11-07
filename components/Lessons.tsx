@@ -1,38 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import Modal from './Modal';
 import { Unit, Exam } from '../types';
 import { LockIcon } from './Icons';
 import ExamModal from './ExamModal';
 
-const Unites: React.FC = () => {
+interface UnitesProps {
+  completedSubUnits: Set<string>;
+  onToggleCompletion: (subUnitId: string) => void;
+}
+
+const Unites: React.FC<UnitesProps> = ({ completedSubUnits, onToggleCompletion }) => {
   const { t } = useLanguage();
   const [view, setView] = useState<'lessons' | 'exams'>('lessons');
   const [currentUnitIndex, setCurrentUnitIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [completedSubUnits, setCompletedSubUnits] = useState<Set<string>>(new Set());
   const [activeExam, setActiveExam] = useState<Exam | null>(null);
   const [isExamModalOpen, setIsExamModalOpen] = useState(false);
-
-  useEffect(() => {
-    const storedCompleted = localStorage.getItem('completedSubUnits');
-    if (storedCompleted) {
-      setCompletedSubUnits(new Set(JSON.parse(storedCompleted)));
-    }
-  }, []);
-
-  const handleToggleCompletion = (subUnitId: string) => {
-    setCompletedSubUnits(prev => {
-      const newCompleted = new Set(prev);
-      if (newCompleted.has(subUnitId)) {
-        newCompleted.delete(subUnitId);
-      } else {
-        newCompleted.add(subUnitId);
-      }
-      localStorage.setItem('completedSubUnits', JSON.stringify(Array.from(newCompleted)));
-      return newCompleted;
-    });
-  };
 
   const units = t.unites.units as Unit[];
   const exams = t.exams.examsList as Exam[];
@@ -176,7 +160,7 @@ const Unites: React.FC = () => {
           hasNext={currentUnitIndex !== null && currentUnitIndex < units.length - 1}
           hasPrevious={currentUnitIndex !== null && currentUnitIndex > 0}
           completedSubUnits={completedSubUnits}
-          onToggleCompletion={handleToggleCompletion}
+          onToggleCompletion={onToggleCompletion}
         />
       )}
 

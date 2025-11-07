@@ -72,13 +72,15 @@ const Dashboard: React.FC = () => {
                   fill="#8884d8"
                   dataKey="value"
                   nameKey="name"
-                  label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
+                  // Fix: Explicitly type `percent` as a number to allow arithmetic operations.
+                  label={({ name, percent }: { name: string; percent: number }) => `${(percent * 100).toFixed(0)}%`}
                 >
                   {performanceData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value, name) => [`${value} (${(performanceData.reduce((acc, entry) => acc + entry.value, 0) > 0 ? (value / performanceData.reduce((acc, entry) => acc + entry.value, 0) * 100).toFixed(0) : 0)}%)`, name]} />
+                {/* Fix: Cast `value` to a number before performing division. */}
+                <Tooltip formatter={(value, name) => [`${value} (${(performanceData.reduce((acc, entry) => acc + entry.value, 0) > 0 ? (Number(value) / performanceData.reduce((acc, entry) => acc + entry.value, 0) * 100).toFixed(0) : 0)}%)`, name]} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>

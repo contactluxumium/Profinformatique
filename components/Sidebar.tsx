@@ -6,15 +6,23 @@ import { SquaresIcon, ChartBarIcon } from './Icons';
 interface SidebarProps {
   activeTab: NavigationItem;
   onSelectTab: (tab: NavigationItem) => void;
+  areAllTasksCompleted: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, areAllTasksCompleted }) => {
   const { t } = useLanguage();
 
-  const navItems = [
+  const allNavItems = [
     { id: 'unites' as NavigationItem, label: t.sidebar.unites, icon: <SquaresIcon /> },
     { id: 'dashboard' as NavigationItem, label: t.sidebar.dashboard, icon: <ChartBarIcon /> },
   ];
+  
+  const navItems = allNavItems.filter(item => {
+    if (item.id === 'dashboard') {
+      return areAllTasksCompleted;
+    }
+    return true;
+  });
 
   return (
     <aside className="w-64 bg-white dark:bg-slate-800 h-full flex flex-col border-e border-slate-200 dark:border-slate-700 shadow-lg">
