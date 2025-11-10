@@ -2,17 +2,32 @@ import { ReactNode } from "react";
 
 export type Language = 'ar' | 'fr';
 
-export type NavigationItem = 'unites' | 'dashboard';
+export type NavigationItem = 'unites' | 'dashboard' | 'profile' | 'studentDashboard' | 'gradeSheet';
 
 export interface Translations {
   [key: string]: any;
 }
 
-export interface StudentData {
-  name: string;
-  lessonsCompleted: number;
-  averageScore: number;
+export type Role = 'student' | 'professor';
+
+export interface Student {
+  id: string; // e.g., "2APIC-1-15"
+  firstName: string;
+  lastName: string;
+  class: string;
+  number: number;
+  password: string;
 }
+
+export interface User {
+  id: string;
+  role: Role;
+  firstName?: string;
+  lastName?: string;
+  class?: string;
+  number?: number;
+}
+
 
 export interface DragOptions {
   draggables: { id: string; label: string }[];
@@ -48,4 +63,23 @@ export interface Exam {
   title: string;
   description: string;
   questions: Question[];
+}
+
+export interface AnswerDetail {
+  questionId: number;
+  questionText: string;
+  userAnswer: any;
+  correctAnswer: any;
+  isCorrect: boolean;
+  pointsEarned: number;
+  totalPoints: number;
+}
+
+export interface ExamResult {
+  examId: string;
+  examTitle: string;
+  score: number;
+  timestamp: number;
+  attempt: number;
+  answers: AnswerDetail[];
 }

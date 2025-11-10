@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
-import { Exam, Question } from '../types';
+import { Exam, Question, User, ExamResult, AnswerDetail } from '../types';
 import { isEqual } from 'lodash';
 
 type AnswersState = { [key: number]: any };
@@ -50,7 +50,7 @@ const QuestionReview: React.FC<{ q: Question; userAnswer: any, t: any }> = ({ q,
 };
 
 
-const ExamModal: React.FC<{ isOpen: boolean; onClose: () => void; exam: Exam | null }> = ({ isOpen, onClose, exam }) => {
+const ExamModal: React.FC<{ isOpen: boolean; onClose: () => void; exam: Exam | null; user: User }> = ({ isOpen, onClose, exam, user }) => {
   const { t } = useLanguage();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswersState>({});
@@ -64,7 +64,7 @@ const ExamModal: React.FC<{ isOpen: boolean; onClose: () => void; exam: Exam | n
       setIsSubmitted(false);
       setScore(0);
     }
-  }, [isOpen]);
+  }, [isOpen, exam]);
   
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -96,7 +96,12 @@ const ExamModal: React.FC<{ isOpen: boolean; onClose: () => void; exam: Exam | n
   };
   
   const handleSubmit = () => {
+    if (user.role !== 'student') return;
+
     let correctAnswersCount = 0;
+    const pointsPerQuestion = totalQuestions > 0 ? 20 / totalQuestions : 0;
+    const answerDetails: AnswerDetail[] = [];
+
     exam.questions.forEach(q => {
       const userAnswer = answers[q.id];
       let isCorrect = false;
@@ -111,8 +116,39 @@ const ExamModal: React.FC<{ isOpen: boolean; onClose: () => void; exam: Exam | n
       if (isCorrect) {
         correctAnswersCount++;
       }
+      
+      answerDetails.push({
+        questionId: q.id,
+        questionText: q.question,
+        userAnswer: userAnswer || null,
+        correctAnswer: q.answer,
+        isCorrect,
+        pointsEarned: isCorrect ? pointsPerQuestion : 0,
+        totalPoints: pointsPerQuestion,
+      });
     });
-    setScore((correctAnswersCount / totalQuestions) * 20);
+
+    const finalScore = correctAnswersCount * pointsPerQuestion;
+    setScore(finalScore);
+    
+    // Save results to localStorage
+    const allResults: { [studentId: string]: ExamResult[] } = JSON.parse(localStorage.getItem('examResults') || '{}');
+    const studentResults = allResults[user.id] || [];
+    const attempt = studentResults.filter(r => r.examId === exam.id).length + 1;
+
+    const newResult: ExamResult = {
+      examId: exam.id,
+      examTitle: exam.title,
+      score: finalScore,
+      timestamp: Date.now(),
+      attempt,
+      answers: answerDetails
+    };
+
+    studentResults.push(newResult);
+    allResults[user.id] = studentResults;
+    localStorage.setItem('examResults', JSON.stringify(allResults));
+    
     setIsSubmitted(true);
   };
 

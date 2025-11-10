@@ -1,27 +1,32 @@
 import React from 'react';
-import { NavigationItem } from '../types';
+import { NavigationItem, User } from '../types';
 import { useLanguage } from '../hooks/useLanguage';
-import { SquaresIcon, ChartBarIcon } from './Icons';
+import { SquaresIcon, ChartBarIcon, UserCircleIcon, DocumentTextIcon } from './Icons';
 
 interface SidebarProps {
   activeTab: NavigationItem;
   onSelectTab: (tab: NavigationItem) => void;
   areAllTasksCompleted: boolean;
+  user: User;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, areAllTasksCompleted }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, areAllTasksCompleted, user }) => {
   const { t } = useLanguage();
 
-  const allNavItems = [
-    { id: 'unites' as NavigationItem, label: t.sidebar.unites, icon: <SquaresIcon /> },
-    { id: 'dashboard' as NavigationItem, label: t.sidebar.dashboard, icon: <ChartBarIcon /> },
-  ];
+  const navItemsMap: { [key in NavigationItem]?: { label: string, icon: React.ReactNode, roles: Array<'student'|'professor'>, condition?: boolean } } = {
+    profile: { label: t.sidebar.profile, icon: <UserCircleIcon />, roles: ['student'] },
+    unites: { label: t.sidebar.unites, icon: <SquaresIcon />, roles: ['student'] },
+    gradeSheet: { label: t.sidebar.gradeSheet, icon: <DocumentTextIcon />, roles: ['student'] },
+    dashboard: { label: t.sidebar.dashboard, icon: <ChartBarIcon />, roles: ['professor'], condition: true },
+    studentDashboard: { label: t.sidebar.dashboard, icon: <ChartBarIcon />, roles: ['student'], condition: areAllTasksCompleted }
+  };
   
-  const navItems = allNavItems.filter(item => {
-    if (item.id === 'dashboard') {
-      return areAllTasksCompleted;
-    }
-    return true;
+  const navItems = (Object.keys(navItemsMap) as NavigationItem[]).filter(key => {
+    const item = navItemsMap[key];
+    if (!item) return false;
+    if (!item.roles.includes(user.role)) return false;
+    if (item.condition === undefined) return true;
+    return item.condition;
   });
 
   return (
@@ -30,24 +35,34 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, areAllTasksCo
         {t.sidebar.title}
       </div>
       <nav className="flex-1 p-4 space-y-2">
-        {navItems.map(item => (
-          <button
-            key={item.id}
-            onClick={() => onSelectTab(item.id)}
-            className={`w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg transition-colors duration-200 
-              ${activeTab === item.id 
-                ? 'bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300' 
-                : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'
-              }
-              ${ 'rtl' === document.documentElement.dir ? 'justify-start' : '' }
-            `}
-            aria-current={activeTab === item.id ? 'page' : undefined}
-          >
-            {item.icon}
-            <span>{item.label}</span>
-          </button>
-        ))}
+        {navItems.map(itemKey => {
+          const item = navItemsMap[itemKey]!;
+          // Use a stable ID for the tab selection
+          const tabId = itemKey === 'studentDashboard' ? 'dashboard' : itemKey;
+          
+          return (
+            <button
+              key={itemKey}
+              onClick={() => onSelectTab(tabId)}
+              className={`w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg transition-colors duration-200 
+                ${activeTab === tabId
+                  ? 'bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300' 
+                  : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'
+                }
+                ${ 'rtl' === document.documentElement.dir ? 'justify-start' : '' }
+              `}
+              aria-current={activeTab === tabId ? 'page' : undefined}
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </button>
+          )
+        })}
       </nav>
+       <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+        <p className="text-sm text-slate-600 dark:text-slate-300">{t.login.loggedInAs}:</p>
+        <p className="font-semibold truncate">{user.role === 'student' ? `${user.firstName} ${user.lastName}` : t.login.profAccount}</p>
+      </div>
     </aside>
   );
 };

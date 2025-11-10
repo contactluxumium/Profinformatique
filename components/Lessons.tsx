@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import Modal from './Modal';
-import { Unit, Exam } from '../types';
+import { Unit, Exam, User } from '../types';
 import { LockIcon } from './Icons';
 import ExamModal from './ExamModal';
 
 interface UnitesProps {
   completedSubUnits: Set<string>;
   onToggleCompletion: (subUnitId: string) => void;
+  user: User;
 }
 
-const Unites: React.FC<UnitesProps> = ({ completedSubUnits, onToggleCompletion }) => {
+const Unites: React.FC<UnitesProps> = ({ completedSubUnits, onToggleCompletion, user }) => {
   const { t } = useLanguage();
   const [view, setView] = useState<'lessons' | 'exams'>('lessons');
   const [currentUnitIndex, setCurrentUnitIndex] = useState<number | null>(null);
@@ -169,6 +170,7 @@ const Unites: React.FC<UnitesProps> = ({ completedSubUnits, onToggleCompletion }
           isOpen={isExamModalOpen}
           onClose={handleCloseExamModal}
           exam={activeExam}
+          user={user}
         />
       )}
     </div>
