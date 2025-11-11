@@ -69,7 +69,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
         firstName, 
         class: studentClass, 
         number: num,
-        password 
+        password,
+        isPremium: false,
     };
     students.push(newStudent);
     localStorage.setItem('students', JSON.stringify(students));

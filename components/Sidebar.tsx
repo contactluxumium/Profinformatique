@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationItem, User } from '../types';
 import { useLanguage } from '../hooks/useLanguage';
-import { SquaresIcon, ChartBarIcon, UserCircleIcon, DocumentTextIcon } from './Icons';
+import { SquaresIcon, ChartBarIcon, UserCircleIcon, DocumentTextIcon, PuzzleIcon } from './Icons';
 
 interface SidebarProps {
   activeTab: NavigationItem;
@@ -13,20 +13,29 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, areAllTasksCompleted, user }) => {
   const { t } = useLanguage();
 
-  const navItemsMap: { [key in NavigationItem]?: { label: string, icon: React.ReactNode, roles: Array<'student'|'professor'>, condition?: boolean } } = {
+  const navItemsMap: { [key in NavigationItem | string]?: { label: string, icon: React.ReactNode, roles: Array<'student'|'professor'>, condition?: boolean } } = {
     profile: { label: t.sidebar.profile, icon: <UserCircleIcon />, roles: ['student'] },
     unites: { label: t.sidebar.unites, icon: <SquaresIcon />, roles: ['student'] },
+    aiTools: { label: t.sidebar.aiTools, icon: <PuzzleIcon />, roles: ['student'], condition: !!user.isPremium },
     gradeSheet: { label: t.sidebar.gradeSheet, icon: <DocumentTextIcon />, roles: ['student'] },
-    dashboard: { label: t.sidebar.dashboard, icon: <ChartBarIcon />, roles: ['professor'], condition: true },
-    studentDashboard: { label: t.sidebar.dashboard, icon: <ChartBarIcon />, roles: ['student'], condition: areAllTasksCompleted }
+    dashboard: { label: t.sidebar.dashboard, icon: <ChartBarIcon />, roles: ['professor', 'student'], condition: user.role === 'professor' ? true : areAllTasksCompleted },
   };
+
+  // The studentDashboard key is effectively an alias for the dashboard with a specific condition.
+  // The map handles the label, icon and roles, we just need to manage the logic of showing it.
+  if (user.role === 'student') {
+      navItemsMap.dashboard.label = t.sidebar.dashboard;
+  }
   
-  const navItems = (Object.keys(navItemsMap) as NavigationItem[]).filter(key => {
-    const item = navItemsMap[key];
-    if (!item) return false;
-    if (!item.roles.includes(user.role)) return false;
-    if (item.condition === undefined) return true;
-    return item.condition;
+  const studentNavOrder: NavigationItem[] = ['profile', 'unites', 'aiTools', 'gradeSheet', 'dashboard'];
+  const profNavOrder: NavigationItem[] = ['dashboard'];
+
+  const orderedNavItems = (user.role === 'student' ? studentNavOrder : profNavOrder).filter(key => {
+      const item = navItemsMap[key];
+      if (!item) return false;
+      if (!item.roles.includes(user.role)) return false;
+      if (item.condition === undefined) return true;
+      return item.condition;
   });
 
   return (
@@ -35,23 +44,21 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, areAllTasksCo
         {t.sidebar.title}
       </div>
       <nav className="flex-1 p-4 space-y-2">
-        {navItems.map(itemKey => {
+        {orderedNavItems.map(itemKey => {
           const item = navItemsMap[itemKey]!;
-          // Use a stable ID for the tab selection
-          const tabId = itemKey === 'studentDashboard' ? 'dashboard' : itemKey;
           
           return (
             <button
               key={itemKey}
-              onClick={() => onSelectTab(tabId)}
+              onClick={() => onSelectTab(itemKey)}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg transition-colors duration-200 
-                ${activeTab === tabId
+                ${activeTab === itemKey
                   ? 'bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300' 
                   : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'
                 }
                 ${ 'rtl' === document.documentElement.dir ? 'justify-start' : '' }
               `}
-              aria-current={activeTab === tabId ? 'page' : undefined}
+              aria-current={activeTab === itemKey ? 'page' : undefined}
             >
               {item.icon}
               <span>{item.label}</span>

@@ -43,8 +43,13 @@ const EditStudentModal: React.FC<EditStudentModalProps> = ({ isOpen, onClose, st
   };
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({...prev, [name]: name === 'number' ? parseInt(value, 10) : value}));
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const { checked } = e.target as HTMLInputElement;
+      setFormData(prev => ({...prev, [name]: checked}));
+    } else {
+      setFormData(prev => ({...prev, [name]: name === 'number' ? parseInt(value, 10) : value}));
+    }
   };
 
   if (!isOpen) return null;
@@ -76,6 +81,22 @@ const EditStudentModal: React.FC<EditStudentModalProps> = ({ isOpen, onClose, st
             <label htmlFor="number" className="block text-sm font-medium text-slate-700 dark:text-slate-300">{t.login.number}</label>
             <input type="number" name="number" id="number" value={formData.number} onChange={handleChange} className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm dark:bg-slate-700 dark:border-slate-600" />
             {errors.number && <p className="text-red-500 text-xs mt-1">{errors.number}</p>}
+          </div>
+          <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
+            <label className="flex items-center justify-between cursor-pointer">
+              <span className="font-semibold text-slate-700 dark:text-slate-200">{t.dashboard.premiumAccount}</span>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  name="isPremium"
+                  checked={!!formData.isPremium}
+                  onChange={handleChange}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-sky-300 dark:peer-focus:ring-sky-800 rounded-full peer dark:bg-slate-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-500 peer-checked:bg-sky-600"></div>
+                <span className="ml-3 text-sm font-medium text-slate-900 dark:text-slate-300 sr-only">{t.dashboard.upgradeAccount}</span>
+              </div>
+            </label>
           </div>
         </div>
         <footer className="flex justify-end gap-4 p-4 bg-slate-50 dark:bg-slate-900/50">

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { InfoCircleIcon, PencilIcon, TrashIcon } from './Icons';
+import { InfoCircleIcon, PencilIcon, TrashIcon, StarIcon } from './Icons';
 import { Student, User, ExamResult, Exam } from '../types';
 import EditStudentModal from './EditStudentModal';
 import StudentProfile from './StudentProfile';
@@ -208,6 +208,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                             <th scope="col" className="px-6 py-3">{t.login.firstName}</th>
                             <th scope="col" className="px-6 py-3">{t.login.class}</th>
                             <th scope="col" className="px-6 py-3">{t.login.number}</th>
+                            <th scope="col" className="px-6 py-3">{t.dashboard.status}</th>
                             <th scope="col" className="px-6 py-3"><span className="sr-only">Actions</span></th>
                         </tr>
                     </thead>
@@ -218,6 +219,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                                 <td className="px-6 py-4">{student.firstName}</td>
                                 <td className="px-6 py-4">{student.class}</td>
                                 <td className="px-6 py-4">{student.number}</td>
+                                <td className="px-6 py-4 text-center">
+                                  {student.isPremium && <StarIcon className="w-5 h-5 text-amber-400" />}
+                                </td>
                                 <td className="px-6 py-4 text-right" onClick={e => e.stopPropagation()}>
                                     <button onClick={() => handleEdit(student)} className="font-medium text-indigo-600 dark:text-indigo-500 hover:underline me-3"><PencilIcon className="w-5 h-5 inline-block"/></button>
                                     <button onClick={() => handleDelete(student.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline"><TrashIcon className="w-5 h-5 inline-block"/></button>
