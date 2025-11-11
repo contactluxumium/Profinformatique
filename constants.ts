@@ -9,7 +9,6 @@ export const translations: Translations = {
       dashboard: "لوحة المتابعة",
       profile: "ملفي الشخصي",
       gradeSheet: "بيان النقط",
-      aiTools: "بحث متقدم",
     },
     login: {
       studentSpace: "فضاء التلميذ",
@@ -41,10 +40,6 @@ export const translations: Translations = {
       progressTitle: "تقدمي الدراسي",
       lessonsCompleted: "الدروس المكتملة",
       totalLessons: "مجموع الدروس",
-      editProfile: "تعديل الملف الشخصي",
-      changePassword: "تغيير كلمة المرور",
-      newPassword: "كلمة المرور الجديدة (اتركها فارغة لعدم التغيير)",
-      updateSuccess: "تم تحديث الملف الشخصي بنجاح!",
     },
     gradeSheet: {
       title: "بيان النقط",
@@ -369,16 +364,7 @@ export const translations: Translations = {
       backToList: "العودة إلى القائمة",
       searchByName: "البحث بالاسم...",
       filterByClass: "التصفية حسب القسم",
-      allClasses: "جميع الأقسام",
-      premiumAccount: "حساب متميز",
-      upgradeAccount: "ترقية إلى حساب متميز",
-      status: "الحالة",
-    },
-    aiTools: {
-      advancedAssistant: "الأستاذ المساعد",
-      assistantDesc: "اطرح أسئلة معقدة واحصل على شروحات مفصلة حول مواضيع علوم الكمبيوتر.",
-      assistantPlaceholder: "اطرح سؤالاً حول الخوارزميات، الشبكات، البرمجة...",
-      ask: "اسأل",
+      allClasses: "جميع الأقسام"
     },
     common: {
       error: "حدث خطأ. يرجى المحاولة مرة أخرى.",
@@ -389,10 +375,9 @@ export const translations: Translations = {
     sidebar: {
       title: "Prof Informatique",
       unites: "Unités",
-      dashboard: "Administration",
+      dashboard: "Tableau de Bord",
       profile: "Mon Profil",
       gradeSheet: "Relevé de Notes",
-      aiTools: "Recherche Avancée",
     },
     login: {
       studentSpace: "Espace Élève",
@@ -424,10 +409,6 @@ export const translations: Translations = {
       progressTitle: "Ma Progression",
       lessonsCompleted: "Leçons terminées",
       totalLessons: "Total des leçons",
-      editProfile: "Modifier le Profil",
-      changePassword: "Changer le mot de passe",
-      newPassword: "Nouveau mot de passe (laisser vide pour ne pas changer)",
-      updateSuccess: "Profil mis à jour avec succès !",
     },
     gradeSheet: {
       title: "Relevé de Notes",
@@ -544,7 +525,7 @@ export const translations: Translations = {
               questions: [
                 { id: 1, type: 'vrai_faux', question: "Pour partager un fichier, il doit être dans un dossier ordinaire.", answer: false, explanation: "Le fichier doit être dans un dossier qui a été désigné comme 'dossier partagé' pour que d'autres sur le réseau puissent y accéder." },
                 { id: 2, type: 'multiple_choice', question: "Pour accéder aux fichiers partagés sur le réseau, sur quelle icône doit-on cliquer ?", options: ['Poste de travail', 'Réseau', 'Corbeille'], answer: "Réseau", explanation: "L'icône 'Réseau' dans le système d'exploitation est la porte d'entrée pour parcourir les machines et les dossiers partagés sur le réseau local." },
-                { id: 3, type: 'multiple_choice_multiple', question: "Quels sont les avantages d'un réseau ? (Cochez toutes les bonnes réponses)", options: ["Partager una imprimante", "Jouer seul", "Partager des fichiers", "Regarder la télé"], answer: ["Partager une imprimante", "Partager des fichiers"], explanation: "Le partage de ressources comme les imprimantes et les fichiers est l'un des principaux avantages des réseaux informatiques." },
+                { id: 3, type: 'multiple_choice_multiple', question: "Quels sont les avantages d'un réseau ? (Cochez toutes les bonnes réponses)", options: ["Partager une imprimante", "Jouer seul", "Partager des fichiers", "Regarder la télé"], answer: ["Partager une imprimante", "Partager des fichiers"], explanation: "Le partage de ressources comme les imprimantes et les fichiers est l'un des principaux avantages des réseaux informatiques." },
                 { id: 4, type: 'vrai_faux', question: "On peut contrôler les permissions d'accès à un dossier partagé.", answer: true, explanation: "Vous pouvez spécifier qui peut seulement lire les fichiers et qui peut les modifier ou les supprimer, ce qui augmente la sécurité." },
                 { id: 5, type: 'multiple_choice', question: 'Quelle est la première condition pour partager un fichier sur un réseau ?', options: ['L\'envoyer par e-mail', 'Le mettre dans un dossier partagé', 'Le copier sur une clé USB'], answer: 'Le mettre dans un dossier partagé', explanation: "La première étape essentielle est de placer le fichier dans un dossier configuré pour le partage réseau." },
               ]
@@ -725,7 +706,7 @@ export const translations: Translations = {
       ]
     },
     dashboard: {
-      title: "Administration",
+      title: "Tableau de Bord de Suivi",
       description: "Suivez les progrès réalisés grâce à des statistiques visuelles.",
       lessonsCompleted: "Unités Terminées",
       averageScore: "Score Moyen",
@@ -752,16 +733,7 @@ export const translations: Translations = {
       backToList: "Retour à la liste",
       searchByName: "Rechercher par nom...",
       filterByClass: "Filtrer par classe",
-      allClasses: "Toutes les classes",
-      premiumAccount: "Compte Premium",
-      upgradeAccount: "Mettre à niveau vers Premium",
-      status: "Statut",
-    },
-    aiTools: {
-      advancedAssistant: "Professeur Assistant",
-      assistantDesc: "Posez des questions complexes et obtenez des explications détaillées sur des sujets d'informatique.",
-      assistantPlaceholder: "Posez une question sur les algorithmes, les réseaux, la programmation...",
-      ask: "Demander",
+      allClasses: "Toutes les classes"
     },
     common: {
       error: "Une erreur est survenue. Veuillez réessayer.",

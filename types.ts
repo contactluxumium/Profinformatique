@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 export type Language = 'ar' | 'fr';
 
-export type NavigationItem = 'unites' | 'dashboard' | 'profile' | 'studentDashboard' | 'gradeSheet' | 'aiTools';
+export type NavigationItem = 'unites' | 'dashboard' | 'profile' | 'studentDashboard' | 'gradeSheet';
 
 export interface Translations {
   [key: string]: any;
@@ -17,7 +17,6 @@ export interface Student {
   class: string;
   number: number;
   password: string;
-  isPremium?: boolean;
 }
 
 export interface User {
@@ -27,7 +26,6 @@ export interface User {
   lastName?: string;
   class?: string;
   number?: number;
-  isPremium?: boolean;
 }
 
 

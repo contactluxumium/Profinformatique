@@ -5,9 +5,8 @@ import Dashboard from './components/Dashboard';
 import StudentProfile from './components/StudentProfile';
 import LoginPage from './components/LoginPage';
 import GradeSheet from './components/GradeSheet';
-import AITools from './components/AITools';
 import { translations } from './constants';
-import { Language, NavigationItem, User, Student } from './types';
+import { Language, NavigationItem, User } from './types';
 import { LanguageContext } from './contexts/LanguageContext';
 import { MenuIcon, XIcon } from './components/Icons';
 
@@ -57,11 +56,6 @@ const App: React.FC = () => {
     setCompletedSubUnits(new Set());
     setActiveTab('unites');
   };
-  
-  const handleUserUpdate = (updatedUser: User) => {
-    setCurrentUser(updatedUser);
-    sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
-  };
 
   const t = useMemo(() => translations[language], [language]);
 
@@ -101,17 +95,15 @@ const App: React.FC = () => {
 
     switch (activeTab) {
       case 'profile':
-        return currentUser.role === 'student' ? <StudentProfile user={currentUser} completedSubUnits={completedSubUnits} onUpdate={handleUserUpdate} /> : null;
+        return currentUser.role === 'student' ? <StudentProfile user={currentUser} completedSubUnits={completedSubUnits} /> : null;
       case 'unites':
         return <Unites completedSubUnits={completedSubUnits} onToggleCompletion={handleToggleCompletion} user={currentUser} />;
       case 'dashboard':
         return <Dashboard user={currentUser} />;
       case 'gradeSheet':
         return currentUser.role === 'student' ? <GradeSheet user={currentUser} /> : null;
-      case 'aiTools':
-        return currentUser.role === 'student' && currentUser.isPremium ? <AITools /> : null;
       default:
-        return <StudentProfile user={currentUser} completedSubUnits={completedSubUnits} onUpdate={handleUserUpdate} />;
+        return <StudentProfile user={currentUser} completedSubUnits={completedSubUnits} />;
     }
   };
 
