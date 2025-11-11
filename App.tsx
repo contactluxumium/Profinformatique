@@ -57,6 +57,11 @@ const App: React.FC = () => {
     setCompletedSubUnits(new Set());
     setActiveTab('unites');
   };
+  
+  const handleUserUpdate = (updatedUser: User) => {
+    setCurrentUser(updatedUser);
+    sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
+  };
 
   const t = useMemo(() => translations[language], [language]);
 
@@ -96,7 +101,7 @@ const App: React.FC = () => {
 
     switch (activeTab) {
       case 'profile':
-        return currentUser.role === 'student' ? <StudentProfile user={currentUser} completedSubUnits={completedSubUnits} /> : null;
+        return currentUser.role === 'student' ? <StudentProfile user={currentUser} completedSubUnits={completedSubUnits} onUpdate={handleUserUpdate} /> : null;
       case 'unites':
         return <Unites completedSubUnits={completedSubUnits} onToggleCompletion={handleToggleCompletion} user={currentUser} />;
       case 'dashboard':
@@ -106,7 +111,7 @@ const App: React.FC = () => {
       case 'aiTools':
         return currentUser.role === 'student' && currentUser.isPremium ? <AITools /> : null;
       default:
-        return <StudentProfile user={currentUser} completedSubUnits={completedSubUnits} />;
+        return <StudentProfile user={currentUser} completedSubUnits={completedSubUnits} onUpdate={handleUserUpdate} />;
     }
   };
 

@@ -15,7 +15,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 const classOptions = Array.from({ length: 8 }, (_, i) => `2APIC-${i + 1}`);
 
 // A self-contained view for showing a single student's details
-const StudentDetailsView: React.FC<{ studentId: string; onBack: () => void }> = ({ studentId, onBack }) => {
+const StudentDetailsView: React.FC<{ studentId: string; onBack: () => void; onUpdate: () => void }> = ({ studentId, onBack, onUpdate }) => {
     const { t } = useLanguage();
 
     const student = useMemo(() => {
@@ -40,7 +40,7 @@ const StudentDetailsView: React.FC<{ studentId: string; onBack: () => void }> = 
                 &larr; {t.dashboard.backToList}
             </button>
             <div className="space-y-8">
-               <StudentProfile user={userForProfile} completedSubUnits={completedSubUnits} />
+               <StudentProfile user={userForProfile} completedSubUnits={completedSubUnits} onUpdate={onUpdate} />
                <GradeSheet user={userForProfile} />
             </div>
         </div>
@@ -139,7 +139,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     }).filter(Boolean) as { studentId: string; name: string; score: number; duration: number; attempts: number; weightedScore: number }[];
     
     // Sort by the new weightedScore in descending order
-    studentData.sort((a, b) => b.weightedScore - a.weightedScore);
+    studentData.sort((a, b) => b.weightedScore - b.weightedScore);
 
     return studentData;
   }, [activeRankingExamId, students]);
@@ -161,7 +161,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }
   
   if (view === 'details' && viewingStudentId) {
-      return <StudentDetailsView studentId={viewingStudentId} onBack={() => setView('list')} />;
+      return <StudentDetailsView studentId={viewingStudentId} onBack={() => setView('list')} onUpdate={refreshStudents} />;
   }
 
 
@@ -282,6 +282,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           onClose={() => setIsEditModalOpen(false)}
           student={editingStudent}
           onSave={handleSave}
+          currentUserRole="professor"
         />
       )}
     </div>

@@ -41,6 +41,10 @@ export const translations: Translations = {
       progressTitle: "تقدمي الدراسي",
       lessonsCompleted: "الدروس المكتملة",
       totalLessons: "مجموع الدروس",
+      editProfile: "تعديل الملف الشخصي",
+      changePassword: "تغيير كلمة المرور",
+      newPassword: "كلمة المرور الجديدة (اتركها فارغة لعدم التغيير)",
+      updateSuccess: "تم تحديث الملف الشخصي بنجاح!",
     },
     gradeSheet: {
       title: "بيان النقط",
@@ -420,6 +424,10 @@ export const translations: Translations = {
       progressTitle: "Ma Progression",
       lessonsCompleted: "Leçons terminées",
       totalLessons: "Total des leçons",
+      editProfile: "Modifier le Profil",
+      changePassword: "Changer le mot de passe",
+      newPassword: "Nouveau mot de passe (laisser vide pour ne pas changer)",
+      updateSuccess: "Profil mis à jour avec succès !",
     },
     gradeSheet: {
       title: "Relevé de Notes",
