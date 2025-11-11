@@ -34,6 +34,12 @@ const GradeSheet: React.FC<GradeSheetProps> = ({ user }) => {
     return String(answer);
   }
 
+  const formatDuration = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}m ${remainingSeconds}s`;
+  };
+
   if (results.length === 0) {
     return (
       <div className="flex-grow flex flex-col items-center justify-center text-center p-8">
@@ -59,11 +65,12 @@ const GradeSheet: React.FC<GradeSheetProps> = ({ user }) => {
             <div key={resultId} className="bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden transition-all duration-300">
               <div className="p-4 md:p-6 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50" onClick={() => toggleReport(resultId)}>
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center">
-                  <div>
+                  <div className="flex-1">
                     <h2 className="text-lg font-bold text-sky-600 dark:text-sky-400">{result.examTitle}</h2>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      {t.gradeSheet.date}: {new Date(result.timestamp).toLocaleString()}
-                    </p>
+                    <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1 mt-1">
+                       <p>{t.gradeSheet.date}: {new Date(result.timestamp).toLocaleString()}</p>
+                       <p>{t.gradeSheet.duration}: {formatDuration(result.duration)}</p>
+                    </div>
                   </div>
                   <div className="mt-3 sm:mt-0 flex items-center gap-4 text-right">
                     <span className="text-sm font-semibold bg-slate-200 dark:bg-slate-700 px-3 py-1 rounded-full">

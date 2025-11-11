@@ -48,6 +48,7 @@ export const translations: Translations = {
       finalScore: "النقطة النهائية",
       date: "وقت وتاريخ الاجتياز",
       attempt: "رقم المحاولة",
+      duration: "المدة المستغرقة",
       details: "عرض التفاصيل",
       hideDetails: "إخفاء التفاصيل",
       question: "السؤال",
@@ -198,7 +199,7 @@ export const translations: Translations = {
               title: 'المراجع المطلقة',
               content: 'المرجع المطلق (مثل $G$2) يشير دائمًا إلى نفس الخلية حتى عند نسخ الصيغة. يتم استخدامه لتثبيت مرجع خلية معينة في الحسابات.',
               questions: [
-                { id: 1, type: 'vrai_faux', question: "المرجع المطلق يتغير عند نسخ الصيغة.", answer: false, explanation: 'علامة الدولار ($) "تُثبّت" مرجع العمود و/أو الصف، لذا فهو لا يتغير عند نسخ الصيغة.' },
+                { id: 1, type: 'vrai_faux', question: "المرجع المطلق يتغير عند نسخ الصيغة.", answer: false, explanation: 'علامة الدولار ($) "تُثبّت" مرجع العمود و/أو الصف, لذا فهو لا يتغير عند نسخ الصيغة.' },
                 { id: 2, type: 'multiple_choice', question: "ما هي الصيغة الصحيحة لمتوسط B2 و B3؟", options: ["=B2+B3/2", "=(B2+B3)/2", "=MOYENNE(B2+B3)"], answer: "=(B2+B3)/2", explanation: 'لحساب المتوسط الحسابي، يجب جمع القيم أولاً (باستخدام الأقواس) ثم القسمة على عددها.' },
                 { id: 3, type: 'multiple_choice', question: 'كيف تتم كتابة مرجع مطلق للخلية A1؟', options: ['A1', '$A$1', 'A$1'], answer: '$A$1', explanation: 'علامة الدولار قبل حرف العمود وقبل رقم الصف ($A$1) تجعل المرجع مطلقًا بالكامل.' },
               ]
@@ -281,6 +282,7 @@ export const translations: Translations = {
       correctAnswer: "الإجابة الصحيحة",
       submitExam: "إرسال الإجابات",
       questionProgress: "سؤال {current} من {total}",
+      timeLeft: "الوقت المتبقي",
       examsList: [
         {
           id: 'exam1',
@@ -290,7 +292,7 @@ export const translations: Translations = {
             { id: 1, type: 'multiple_choice', question: 'ما هو النموذج الذي يعتمد على جهاز مركزي لتوفير الخدمات؟', options: ['النظير للنظير', 'العميل/الخادم', 'الناقل'], answer: 'العميل/الخادم', explanation: 'نموذج العميل/الخادم يستخدم خادمًا مركزيًا لإدارة الموارد والخدمات.' },
             { id: 2, type: 'vrai_faux', question: 'في طوبولوجيا النجمة، يؤدي فشل الجهاز المركزي إلى توقف الشبكة بأكملها.', answer: true, explanation: 'لأن جميع الاتصالات تمر عبر الجهاز المركزي (Switch أو Hub)، فإن فشله يعطل الشبكة بالكامل.' },
             { id: 3, type: 'multiple_choice', question: 'أي جهاز يستخدم لتوصيل شبكتين محليتين مختلفتين أو شبكة محلية بالإنترنت؟', options: ['Hub', 'Switch', 'Router'], answer: 'Router', explanation: 'الـ Router (الموجه) هو الجهاز المسؤول عن توجيه البيانات بين الشبكات المختلفة.' },
-            { id: 4, 'type': 'multiple_choice_multiple', 'question': 'ما هي المكونات المادية اللازمة لإنشاء شبكة سلكية من 3 أجهزة كمبيوتر؟', 'options': ['بطاقات شبكة', 'Switch', 'نقطة وصول', 'كابلات شبكة'], 'answer': ['بطاقات شبكة', 'Switch', 'كابلات شبكة'], 'explanation': 'كل جهاز يحتاج بطاقة شبكة، ويتم توصيلهم جميعًا بجهاز مركزي (Switch) باستخدام كابلات شبكة.' },
+            { 'type': 'multiple_choice_multiple', 'question': 'ما هي المكونات المادية اللازمة لإنشاء شبكة سلكية من 3 أجهزة كمبيوتر؟', 'options': ['بطاقات شبكة', 'Switch', 'نقطة وصول', 'كابلات شبكة'], 'answer': ['بطاقات شبكة', 'Switch', 'كابلات شبكة'], 'explanation': 'كل جهاز يحتاج بطاقة شبكة، ويتم توصيلهم جميعًا بجهاز مركزي (Switch) باستخدام كابلات شبكة.' },
             { id: 5, type: 'vrai_faux', question: 'شبكة النظير للنظير (P2P) هي الأفضل لإدارة شبكة كبيرة تضم 100 جهاز.', answer: false, explanation: 'شبكة النظير للنظير تصبح صعبة الإدارة وغير آمنة مع زيادة عدد الأجهزة. شبكة العميل/الخادم هي الخيار الأفضل للشبكات الكبيرة.' },
             { id: 6, type: 'multiple_choice', question: 'ما هو نوع الكابل المستخدم لتوصيل جهازين مباشرة بدون جهاز مركزي؟', options: ['كابل مستقيم (droit)', 'كابل متصالب (croisé)', 'كابل محوري (coaxial)'], answer: 'كابل متصالب (croisé)', explanation: 'الكابل المتصالب يعكس ترتيب الأسلاك مما يسمح لجهازين من نفس النوع بالاتصال مباشرة.' },
             { id: 7, type: 'vrai_faux', question: 'الشبكة اللاسلكية (Wi-Fi) أسرع دائمًا من الشبكة السلكية.', answer: false, explanation: 'بشكل عام، توفر الشبكات السلكية (خاصة التي تستخدم الألياف الضوئية أو كابلات Ethernet الحديثة) سرعات أعلى واتصالًا أكثر استقرارًا من الشبكات اللاسلكية.' },
@@ -350,7 +352,19 @@ export const translations: Translations = {
         title: "لا توجد بيانات للطلاب",
         description: "لا يوجد تلاميذ مسجلون بعد. سيظهرون هنا عند إنشاء حساباتهم.",
         addStudent: "إضافة طالب"
-      }
+      },
+      rankings: "الترتيب",
+      selectExam: "اختر امتحانا",
+      rank: "الرتبة",
+      studentName: "اسم التلميذ",
+      weightedScore: "النقطة الموزونة",
+      score: "النقطة",
+      duration: "المدة",
+      attempts: "المحاولات",
+      backToList: "العودة إلى القائمة",
+      searchByName: "البحث بالاسم...",
+      filterByClass: "التصفية حسب القسم",
+      allClasses: "جميع الأقسام"
     },
     common: {
       error: "حدث خطأ. يرجى المحاولة مرة أخرى.",
@@ -403,6 +417,7 @@ export const translations: Translations = {
       finalScore: "Note Finale",
       date: "Date et heure de passage",
       attempt: "Tentative N°",
+      duration: "Durée",
       details: "Voir les détails",
       hideDetails: "Cacher les détails",
       question: "Question",
@@ -636,6 +651,7 @@ export const translations: Translations = {
       correctAnswer: "Réponse correcte",
       submitExam: "Soumettre l'examen",
       questionProgress: "Question {current} sur {total}",
+      timeLeft: "Temps restant",
       examsList: [
         {
           id: 'exam1',
@@ -705,7 +721,19 @@ export const translations: Translations = {
         title: "Aucune Donnée Étudiante Disponible",
         description: "Aucun élève n'est encore inscrit. Ils apparaîtront ici une fois leurs comptes créés.",
         addStudent: "Ajouter un Étudiant"
-      }
+      },
+      rankings: "Classements",
+      selectExam: "Sélectionner un examen",
+      rank: "Rang",
+      studentName: "Nom de l'élève",
+      weightedScore: "Note Pondérée",
+      score: "Note",
+      duration: "Durée",
+      attempts: "Tentatives",
+      backToList: "Retour à la liste",
+      searchByName: "Rechercher par nom...",
+      filterByClass: "Filtrer par classe",
+      allClasses: "Toutes les classes"
     },
     common: {
       error: "Une erreur est survenue. Veuillez réessayer.",

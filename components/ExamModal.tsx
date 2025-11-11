@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import { Exam, Question, User, ExamResult, AnswerDetail } from '../types';
 import { isEqual } from 'lodash';
@@ -56,50 +56,24 @@ const ExamModal: React.FC<{ isOpen: boolean; onClose: () => void; exam: Exam | n
   const [answers, setAnswers] = useState<AnswersState>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(20 * 60);
+  const [timeTaken, setTimeTaken] = useState(0);
+  const timerRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      setCurrentQuestionIndex(0);
-      setAnswers({});
-      setIsSubmitted(false);
-      setScore(0);
-    }
-  }, [isOpen, exam]);
-  
-  useEffect(() => {
-    const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [onClose]);
-
-  if (!isOpen || !exam) return null;
-
-  const currentQuestion = exam.questions[currentQuestionIndex];
-  const totalQuestions = exam.questions.length;
-
-  const handleAnswerSelect = (questionId: number, selectedAnswer: any) => {
-    setAnswers(prev => ({ ...prev, [questionId]: selectedAnswer }));
-  };
-
-  const handleNext = () => {
-    if (currentQuestionIndex < totalQuestions - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1);
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
     }
   };
   
-  const handleSubmit = () => {
-    if (user.role !== 'student') return;
+  const handleSubmit = useCallback(() => {
+    if (isSubmitted || !exam || user.role !== 'student') return;
+    
+    clearTimer();
 
     let correctAnswersCount = 0;
-    const pointsPerQuestion = totalQuestions > 0 ? 20 / totalQuestions : 0;
+    const pointsPerQuestion = exam.questions.length > 0 ? 20 / exam.questions.length : 0;
     const answerDetails: AnswerDetail[] = [];
 
     exam.questions.forEach(q => {
@@ -142,6 +116,7 @@ const ExamModal: React.FC<{ isOpen: boolean; onClose: () => void; exam: Exam | n
       score: finalScore,
       timestamp: Date.now(),
       attempt,
+      duration: timeTaken,
       answers: answerDetails
     };
 
@@ -150,6 +125,66 @@ const ExamModal: React.FC<{ isOpen: boolean; onClose: () => void; exam: Exam | n
     localStorage.setItem('examResults', JSON.stringify(allResults));
     
     setIsSubmitted(true);
+  }, [exam, answers, user.id, user.role, isSubmitted, timeTaken]);
+
+
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentQuestionIndex(0);
+      setAnswers({});
+      setIsSubmitted(false);
+      setScore(0);
+      setTimeLeft(20 * 60);
+      setTimeTaken(0);
+    } else {
+      clearTimer();
+    }
+  }, [isOpen, exam]);
+
+  useEffect(() => {
+    if (isOpen && !isSubmitted) {
+      timerRef.current = window.setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            clearTimer();
+            handleSubmit();
+            return 0;
+          }
+          return prev - 1;
+        });
+        setTimeTaken(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearTimer();
+  }, [isOpen, isSubmitted, handleSubmit]);
+  
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+
+  if (!isOpen || !exam) return null;
+
+  const currentQuestion = exam.questions[currentQuestionIndex];
+  const totalQuestions = exam.questions.length;
+
+  const handleAnswerSelect = (questionId: number, selectedAnswer: any) => {
+    setAnswers(prev => ({ ...prev, [questionId]: selectedAnswer }));
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex < totalQuestions - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(prev => prev - 1);
+    }
   };
 
   const renderQuestionOptions = (q: Question) => {
@@ -208,11 +243,20 @@ const ExamModal: React.FC<{ isOpen: boolean; onClose: () => void; exam: Exam | n
     }
   };
 
+  const formattedTime = `${Math.floor(timeLeft / 60)}:${('0' + (timeLeft % 60)).slice(-2)}`;
+
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex justify-center items-start p-4 sm:p-8 overflow-y-auto animate-fadeIn" onClick={onClose} aria-modal="true" role="dialog">
       <div className="bg-white dark:bg-slate-800 rounded-lg shadow-2xl w-full max-w-full sm:max-w-3xl max-h-[95vh] sm:max-h-[90vh] flex flex-col animate-scaleIn" onClick={e => e.stopPropagation()}>
         <header className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
-          <h2 className="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-100">{exam.title}</h2>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+            <h2 className="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-100">{exam.title}</h2>
+            {!isSubmitted && (
+                <span className={`text-base font-mono font-semibold px-3 py-1 rounded-md ${timeLeft < 300 ? 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300' : 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200'}`}>
+                    {t.exams.timeLeft}: {formattedTime}
+                </span>
+            )}
+          </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" aria-label="Close modal">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>

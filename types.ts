@@ -81,5 +81,6 @@ export interface ExamResult {
   score: number;
   timestamp: number;
   attempt: number;
+  duration: number; // in seconds
   answers: AnswerDetail[];
 }
