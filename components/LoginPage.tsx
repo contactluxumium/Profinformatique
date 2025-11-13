@@ -216,6 +216,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-slate-100 dark:bg-slate-900 font-sans p-4">
       <div className="w-full max-w-md mx-auto">
+        <div className="text-center mb-6">
+          <a href="https://drive.usercontent.google.com/download?id=1yfKT8o8imI0IZd04c5e14pmbRRu4-wQu&export=download&authuser=0&confirm=t&uuid=b1d3696d-e94c-4e5b-93da-779b0648a540&at=ALWLOp4ZaHZFQzlS3EK1y8X8Z3bN:1763051867100" target="_blank" rel="noopener noreferrer">
+            <img 
+              src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitfP8njkq8DTI8lZ_LPe4BO_I2aMxFAP-Zotm4uHQ1vRI-83pCQd7qVeWeZRQqvgd7pXOsBC3V40N1ITJDP7tBIN2O2oM1OJNgpUJXxTJ3MCMVcJVd7mc4jtuu6rqyFXKczjdX0EiiEfCsUAcgHeBFaabh1cYgdbigPo1xkprUz49sB2PxNsZFdgWibU6n/w400-h67/%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D8%B7%D8%A8%D9%8A%D9%82%20%D8%A7%D8%B6%D8%BA%D8%B7%20%D9%87%D9%86%D8%A7.png" 
+              alt="Download : اضغط هنا لتحميل التطبيق" 
+              className="inline-block"
+            />
+          </a>
+        </div>
         <h1 className="text-3xl font-bold text-center text-indigo-600 dark:text-indigo-400 mb-6">{t.sidebar.title}</h1>
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 md:p-8">
             <div className="flex bg-slate-100 dark:bg-slate-900 rounded-xl p-1.5 mb-8 space-x-2">
