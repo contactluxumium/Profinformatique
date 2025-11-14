@@ -111,7 +111,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   };
 
   const renderForm = () => {
-    const inputClasses = "mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base p-3 dark:bg-slate-700 dark:border-slate-600 bg-slate-50";
+    const inputClasses = "mt-1 block w-full rounded-lg border border-[#0057ce] shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base p-3 dark:bg-slate-700 bg-white";
     const buttonClasses = "w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold text-base";
     
     if (activeTab === 'prof') {
@@ -219,7 +219,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
         <div className="text-center mb-6">
           <a href="https://drive.usercontent.google.com/download?id=1yfKT8o8imI0IZd04c5e14pmbRRu4-wQu&export=download&authuser=0&confirm=t&uuid=b1d3696d-e94c-4e5b-93da-779b0648a540&at=ALWLOp4ZaHZFQzlS3EK1y8X8Z3bN:1763051867100" target="_blank" rel="noopener noreferrer">
             <img 
-              src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitfP8njkq8DTI8lZ_LPe4BO_I2aMxFAP-Zotm4uHQ1vRI-83pCQd7qVeWeZRQqvgd7pXOsBC3V40N1ITJDP7tBIN2O2oM1OJNgpUJXxTJ3MCMVcJVd7mc4jtuu6rqyFXKczjdX0EiiEfCsUAcgHeBFaabh1cYgdbigPo1xkprUz49sB2PxNsZFdgWibU6n/w400-h67/%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D8%B7%D8%A8%D9%8A%D9%82%20%D8%A7%D8%B6%D8%BA%D8%B7%20%D9%87%D9%86%D8%A7.png" 
+              src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi47WKGDVAPIjm3byl1PknJWmv8RYLDaSVO_dOwUKoFyBsdovbJ8L32WQlZ4RMY6QwUB5In0SXZ8eRVop_hGvs7XlAtdUoHSZw9dcg8V4R1A0Y7P7bxvsk9rYxU8maIGUVTiQW7K0_pntIpYAnBkxRpO9eQXM7-HnIjN43Lc_H5OKxy0QB7x5SsqZe7LIoy/s1600/%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D8%B7%D8%A8%D9%8A%D9%82%20%D8%A7%D8%B6%D8%BA%D8%B7%20%D9%87%D9%86%D8%A7%20(300%20x%20100%20px).png" 
               alt="Download : اضغط هنا لتحميل التطبيق" 
               className="inline-block"
             />
